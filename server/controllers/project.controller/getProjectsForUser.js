@@ -1,11 +1,11 @@
+import { toApi as toApiProjectObject } from '../../domain-objects/Project';
 import Project from '../../models/project';
 import User from '../../models/user';
-import { toApi as toApiProjectObject } from '../../domain-objects/Project';
 import createApplicationErrorClass from '../../utils/createApplicationErrorClass';
 
 const UserNotFoundError = createApplicationErrorClass('UserNotFoundError');
 
-function getProjectsForUserName(username) {
+function getProjectsForUserName(username, authenicatedUser) {
   return new Promise((resolve, reject) => {
     User.findOne({ username }, (err, user) => {
       if (err) {
@@ -17,8 +17,19 @@ function getProjectsForUserName(username) {
         reject(new UserNotFoundError());
         return;
       }
-
-      Project.find({ user: user._id })
+      const isUserAuthorized = authenicatedUser && username === authenicatedUser.username;
+      let query;
+      if (!isUserAuthorized) {
+        query = {
+          user: user._id,
+          isPrivate: false
+        };
+      } else {
+        query = {
+          user: user._id
+        };
+      }
+      Project.find(query)
         .sort('-createdAt')
         .select('name files id createdAt updatedAt')
         .exec((innerErr, projects) => {
@@ -26,7 +37,6 @@ function getProjectsForUserName(username) {
             reject(innerErr);
             return;
           }
-
           resolve(projects);
         });
     });
@@ -35,7 +45,7 @@ function getProjectsForUserName(username) {
 
 export default function getProjectsForUser(req, res) {
   if (req.params.username) {
-    return getProjectsForUserName(req.params.username)
+    return getProjectsForUserName(req.params.username, req.user)
       .then(projects => res.json(projects))
       .catch((err) => {
         if (err instanceof UserNotFoundError) {

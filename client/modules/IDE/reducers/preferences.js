@@ -10,7 +10,7 @@ const initialState = {
   gridOutput: false,
   soundOutput: false,
   theme: 'light',
-  autorefresh: false
+  autorefresh: false,
 };
 
 const preferences = (state = initialState, action) => {

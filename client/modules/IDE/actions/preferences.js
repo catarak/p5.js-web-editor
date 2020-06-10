@@ -16,7 +16,6 @@ function updatePreferences(formParams, dispatch) {
       });
     });
 }
-
 export function setFontSize(value) {
   return (dispatch, getState) => { // eslint-disable-line
     dispatch({

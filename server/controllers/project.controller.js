@@ -2,7 +2,6 @@ import archiver from 'archiver';
 import format from 'date-fns/format';
 import isUrl from 'is-url';
 import jsdom, { serializeDocument } from 'jsdom';
-import isAfter from 'date-fns/is_after';
 import request from 'request';
 import slugify from 'slugify';
 import Project from '../models/project';
@@ -10,20 +9,21 @@ import User from '../models/user';
 import { resolvePathToFile } from '../utils/filePath';
 import generateFileSystemSafeName from '../utils/generateFileSystemSafeName';
 
-export { default as createProject, apiCreateProject } from './project.controller/createProject';
+
+export { apiCreateProject, default as createProject } from './project.controller/createProject';
 export { default as deleteProject } from './project.controller/deleteProject';
-export { default as getProjectsForUser, apiGetProjectsForUser } from './project.controller/getProjectsForUser';
+export { apiGetProjectsForUser, default as getProjectsForUser } from './project.controller/getProjectsForUser';
 
 export function updateProject(req, res) {
   Project.findById(req.params.project_id, (findProjectErr, project) => {
-    if (!project.user.equals(req.user._id)) {
-      res.status(403).send({ success: false, message: 'Session does not match owner of project.' });
-      return;
-    }
-    if (req.body.updatedAt && isAfter(new Date(project.updatedAt), req.body.updatedAt)) {
-      res.status(409).send({ success: false, message: 'Attempted to save stale version of project.' });
-      return;
-    }
+    // if (!project.user.equals(req.user._id)) {
+    //   res.status(403).send({ success: false, message: 'Session does not match owner of project.' });
+    //   return;
+    // }
+    // if (req.body.updatedAt && isAfter(new Date(project.updatedAt), req.body.updatedAt)) {
+    //   res.status(409).send({ success: false, message: 'Attempted to save stale version of project.' });
+    //   return;
+    // }
     Project.findByIdAndUpdate(
       req.params.project_id,
       {
@@ -140,14 +140,21 @@ export function projectExists(projectId, callback) {
   ));
 }
 
-export function projectForUserExists(username, projectId, callback) {
+export function projectForUserExists(username, authenicatedUser, projectId, callback) {
+  console.log('Just got called');
   User.findOne({ username }, (err, user) => {
     if (!user) {
       callback(false);
       return;
     }
-    Project.findOne({ user: user._id, $or: [{ _id: projectId }, { slug: projectId }] }, (innerErr, project) => {
+    Project.findOne({ _id: projectId, user: user._id }, (innerErr, project) => {
+      const userId = project.user._id;
       if (project) {
+        const isUserAuthorized = authenicatedUser && userId === authenicatedUser._id;
+        if (project.isPrivate && !isUserAuthorized) {
+          callback(false);
+          return;
+        }
         callback(true);
       }
     });

@@ -7,7 +7,8 @@ const initialState = () => {
   return {
     name: generatedName,
     updatedAt: '',
-    isSaving: false
+    isSaving: false,
+    isPrivate: false // initialize sketch privacy state to false
   };
 };
 
@@ -24,7 +25,8 @@ const project = (state, action) => {
         name: action.project.name,
         updatedAt: action.project.updatedAt,
         owner: action.owner,
-        isSaving: false
+        isSaving: false,
+        isPrivate: false
       };
     case ActionTypes.SET_PROJECT:
       return {
@@ -32,7 +34,8 @@ const project = (state, action) => {
         name: action.project.name,
         updatedAt: action.project.updatedAt,
         owner: action.owner,
-        isSaving: false
+        isSaving: false,
+        isPrivate: action.project.isPrivate
       };
     case ActionTypes.RESET_PROJECT:
       return initialState();
@@ -46,6 +49,8 @@ const project = (state, action) => {
       return Object.assign({}, state, { isSaving: true });
     case ActionTypes.END_SAVING_PROJECT:
       return Object.assign({}, state, { isSaving: false });
+    case ActionTypes.SET_IS_PRIVATE_OUTPUT:
+      return Object.assign({}, state, { isPrivate: action.value });
     default:
       return state;
   }

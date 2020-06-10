@@ -1,18 +1,12 @@
-import { browserHistory } from 'react-router';
+import each from 'async/each';
 import axios from 'axios';
 import objectID from 'bson-objectid';
-import each from 'async/each';
 import isEqual from 'lodash/isEqual';
+import { browserHistory } from 'react-router';
 import * as ActionTypes from '../../../constants';
-import { showToast, setToastText } from './toast';
-import {
-  setUnsavedChanges,
-  justOpenedProject,
-  resetJustOpenedProject,
-  showErrorModal,
-  setPreviousPath
-} from './ide';
 import { clearState, saveState } from '../../../persistState';
+import { justOpenedProject, resetJustOpenedProject, setPreviousPath, setUnsavedChanges, showErrorModal } from './ide';
+import { setToastText, showToast } from './toast';
 
 const __process = (typeof global !== 'undefined' ? global : window).process;
 const ROOT_URL = __process.env.API_URL;
@@ -25,7 +19,6 @@ export function setProject(project) {
     owner: project.user
   };
 }
-
 export function setProjectName(name) {
   return {
     type: ActionTypes.SET_PROJECT_NAME,
@@ -59,6 +52,30 @@ export function getProject(id, username) {
       })
       .catch((error) => {
         const { response } = error;
+        dispatch({
+          type: ActionTypes.ERROR,
+          error: response.data
+        });
+      });
+  };
+}
+export function setIsPrivate(value) {
+  return (dispatch, getState) => {
+    dispatch({
+      type: ActionTypes.SET_IS_PRIVATE_OUTPUT,
+      value
+    });
+    const state = getState();
+    const { id } = state.project;
+    console.log(value);
+    axios.put(`${ROOT_URL}/projects/${id}`, { isPrivate: value }, { withCredentials: true })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log('success');
+        }
+      })
+      .catch((response) => {
+        console.log(response);
         dispatch({
           type: ActionTypes.ERROR,
           error: response.data

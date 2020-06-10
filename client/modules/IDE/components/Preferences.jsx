@@ -99,6 +99,7 @@ class Preferences extends React.Component {
           <TabList>
             <div className="tabs__titles">
               <Tab><h4 className="tabs__title">General Settings</h4></Tab>
+              <Tab><h4 className="tabs__title">Sketch Settings</h4></Tab>
               <Tab><h4 className="tabs__title">Accessibility</h4></Tab>
             </div>
           </TabList>
@@ -231,6 +232,25 @@ class Preferences extends React.Component {
           </TabPanel>
           <TabPanel>
             <div className="preference">
+              <h4 className="preference__title">Privacy Settings</h4>
+              <div className="preference__options">
+                <input
+                  type="checkbox"
+                  onChange={(event) => {
+                    this.props.setIsPrivate(event.target.checked);
+                  }}
+                  aria-label="privacy output on"
+                  name="privacy output"
+                  id="privacy-output-on"
+                  value="On"
+                  checked={(this.props.isPrivate)}
+                />
+                <label htmlFor="privacy-output-on" className="preference__option preference__canvas">Make Sketch Private</label>
+              </div>
+            </div>
+          </TabPanel>
+          <TabPanel>
+            <div className="preference">
               <h4 className="preference__title">Line numbers</h4>
               <div className="preference__options">
                 <input
@@ -347,12 +367,14 @@ Preferences.propTypes = {
   setFontSize: PropTypes.func.isRequired,
   autosave: PropTypes.bool.isRequired,
   linewrap: PropTypes.bool.isRequired,
+  isPrivate: PropTypes.bool.isRequired,
   setLineNumbers: PropTypes.func.isRequired,
   setAutosave: PropTypes.func.isRequired,
   setLinewrap: PropTypes.func.isRequired,
   textOutput: PropTypes.bool.isRequired,
   gridOutput: PropTypes.bool.isRequired,
   soundOutput: PropTypes.bool.isRequired,
+  setIsPrivate: PropTypes.func.isRequired,
   setTextOutput: PropTypes.func.isRequired,
   setGridOutput: PropTypes.func.isRequired,
   setSoundOutput: PropTypes.func.isRequired,
