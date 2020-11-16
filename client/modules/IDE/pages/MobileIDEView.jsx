@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { withRouter, browserHistory } from 'react-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
 
 import * as IDEActions from '../actions/ide';
+import * as UserActions from '../../User/actions';
 import * as ProjectActions from '../actions/project';
 import * as ConsoleActions from '../actions/console';
 import * as PreferencesActions from '../actions/preferences';
@@ -18,7 +19,7 @@ import * as EditorAccessibilityActions from '../actions/editorAccessibility';
 // Local Imports
 import Editor from '../components/Editor';
 
-import { PlayIcon, MoreIcon, FolderIcon, PreferencesIcon, TerminalIcon, SaveIcon } from '../../../common/icons';
+import { StopIcon, PlayIcon, MoreIcon, FolderIcon, PreferencesIcon, TerminalIcon, SaveIcon } from '../../../common/icons';
 import UnsavedChangesDotIcon from '../../../images/unsaved-changes-dot.svg';
 
 import IconButton from '../../../components/mobile/IconButton';
@@ -34,10 +35,11 @@ import { remSize } from '../../../theme';
 import ActionStrip from '../../../components/mobile/ActionStrip';
 import useAsModal from '../../../components/useAsModal';
 import Dropdown from '../../../components/Dropdown';
+import FloatingPreview from '../../../components/mobile/FloatingPreview';
 import { getIsUserOwner } from '../selectors/users';
 
 
-import { useEffectWithComparison, useEventListener } from '../hooks/custom-hooks';
+import { useEffectWithComparison, useEventListener, useLongPress } from '../hooks/custom-hooks';
 
 import * as device from '../../../utils/device';
 
@@ -46,7 +48,7 @@ const withChangeDot = (title, unsavedChanges = false) => (
     {title}
     <span className="editor__unsaved-changes">
       {unsavedChanges &&
-      <UnsavedChangesDotIcon role="img" aria-label="Sketch has unsaved changes" focusable="false" />}
+        <UnsavedChangesDotIcon role="img" aria-label="Sketch has unsaved changes" focusable="false" />}
     </span>
   </span>
 );
@@ -61,7 +63,7 @@ const NavItem = styled.li`
   position: relative;
 `;
 
-const getNavOptions = (username = undefined, logoutUser = () => {}, toggleForceDesktop = () => {}) => {
+const getNavOptions = (username = undefined, logoutUser = () => { }, toggleForceDesktop = () => { }) => {
   const { t } = useTranslation();
   return (username
     ? [
@@ -109,12 +111,12 @@ const handleGlobalKeydown = (props, cmController) => (e) => {
         e.preventDefault();
         e.stopPropagation();
         startSketch();
-      // 50 === 2
+        // 50 === 2
       } else if (e.keyCode === 50
       ) {
         e.preventDefault();
         setAllAccessibleOutput(false);
-      // 49 === 1
+        // 49 === 1
       } else if (e.keyCode === 49) {
         e.preventDefault();
         setAllAccessibleOutput(true);
@@ -127,7 +129,7 @@ const handleGlobalKeydown = (props, cmController) => (e) => {
       else if (user.authenticated) cloneProject();
       else showErrorModal('forceAuthentication');
 
-    // 13 === enter
+      // 13 === enter
     } else if (e.keyCode === 66) {
       e.preventDefault();
       if (!ide.sidebarIsExpanded) expandSidebar();
@@ -173,23 +175,11 @@ const autosave = (autosaveInterval, setAutosaveInterval) => (props, prevProps) =
   }
 };
 
-// ide, preferences, project, selectedFile, user, params, unsavedChanges, expandConsole, collapseConsole,
-// stopSketch, startSketch, getProject, clearPersistedState, autosaveProject, saveProject, files
-
 const MobileIDEView = (props) => {
-  // const {
-  //   preferences, ide, editorAccessibility, project, updateLintMessage, clearLintMessage,
-  //   selectedFile, updateFileContent, files, user, params,
-  //   closeEditorOptions, showEditorOptions, logoutUser,
-  //   startRefreshSketch, stopSketch, expandSidebar, collapseSidebar, clearConsole, console,
-  //   showRuntimeErrorWarning, hideRuntimeErrorWarning, startSketch, getProject, clearPersistedState, setUnsavedChanges,
-  //   toggleForceDesktop
-  // } = props;
-
   const {
     ide, preferences, project, selectedFile, user, params, unsavedChanges, expandConsole, collapseConsole,
     stopSketch, startSketch, getProject, clearPersistedState, autosaveProject, saveProject, files,
-    toggleForceDesktop, logoutUser, toast, isUserOwner
+    toggleForceDesktop, logoutUser, setAutorefresh, toast, isUserOwner
   } = props;
 
 
@@ -224,6 +214,7 @@ const MobileIDEView = (props) => {
     align="right"
   />);
 
+
   const [toggleExplorer, Explorer] = useAsModal(toggle =>
     (<MobileExplorer
       id={getRootFileID(files)}
@@ -238,6 +229,25 @@ const MobileIDEView = (props) => {
   });
 
   useEventListener('keydown', handleGlobalKeydown(props, cmController), false, [props]);
+
+  const [showFloatingPreview, setShowFloatingPreview] = useState(false);
+  const pressPlayEvents = useLongPress(
+    () => {
+      startSketch();
+      setAutorefresh(true);
+      setShowFloatingPreview(!showFloatingPreview);
+    },
+    () => {
+      setAutorefresh(false);
+      if (showFloatingPreview) {
+        stopSketch();
+        setShowFloatingPreview(false);
+      } else {
+        startSketch();
+        browserHistory.push('/preview');
+      }
+    }
+  );
 
   const projectActions =
     [{
@@ -264,7 +274,7 @@ const MobileIDEView = (props) => {
           <NavDropDown />
         </NavItem>
         <li>
-          <IconButton to="/preview" onClick={() => { startSketch(); }} icon={PlayIcon} aria-label="Run sketch" />
+          <IconButton {...pressPlayEvents} icon={showFloatingPreview ? StopIcon : PlayIcon} aria-label="Run sketch" />
         </li>
       </Header>
       {toast.isVisible && <Toast />}
@@ -272,6 +282,8 @@ const MobileIDEView = (props) => {
       <IDEWrapper>
         <Editor provideController={setCmController} />
       </IDEWrapper>
+
+      {showFloatingPreview && <FloatingPreview />}
 
       <Footer>
         {consoleIsExpanded && (
@@ -284,6 +296,7 @@ const MobileIDEView = (props) => {
     </Screen>
   );
 };
+
 
 const handleGlobalKeydownProps = {
   expandConsole: PropTypes.func.isRequired,
@@ -357,6 +370,7 @@ MobileIDEView.propTypes = {
 
   unsavedChanges: PropTypes.bool.isRequired,
   autosaveProject: PropTypes.func.isRequired,
+  setAutorefresh: PropTypes.func.isRequired,
   isUserOwner: PropTypes.bool.isRequired,
 
 
@@ -385,6 +399,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   ...ProjectActions,
   ...IDEActions,
   ...ConsoleActions,
+  ...UserActions,
   ...PreferencesActions,
   ...EditorAccessibilityActions
 }, dispatch);
