@@ -159,6 +159,19 @@ class IDEView extends React.Component {
     clearTimeout(this.autosaveInterval);
     this.autosaveInterval = null;
   }
+
+  handleNew() {
+    if (!this.props.ide.unsavedChanges) {
+      this.props.showToast(1500);
+      this.props.setToastText('Toast.OpenedNewSketch');
+      this.props.newProject();
+    } else if (warnIfUnsavedChanges && warnIfUnsavedChanges(this.props)) {
+      this.props.showToast(1500);
+      this.props.setToastText('Toast.OpenedNewSketch');
+      this.props.newProject();
+    }
+  }
+
   handleGlobalKeydown(e) {
     // 83 === s
     if (
@@ -234,6 +247,11 @@ class IDEView extends React.Component {
       } else if (this.props.ide.modalIsVisible) {
         this.props.closeNewFileModal();
       }
+      // 80 === p
+    } else if (e.keyCode === 80 && ((e.metaKey && this.isMac) || (e.ctrlKey && !this.isMac))) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.handleNew();
     }
   }
 
@@ -567,6 +585,9 @@ IDEView.propTypes = {
   createFolder: PropTypes.func.isRequired,
   closeShareModal: PropTypes.func.isRequired,
   closeKeyboardShortcutModal: PropTypes.func.isRequired,
+  showToast: PropTypes.func.isRequired,
+  setToastText: PropTypes.func.isRequired,
+  newProject: PropTypes.func.isRequired,
   toast: PropTypes.shape({
     isVisible: PropTypes.bool.isRequired
   }).isRequired,
