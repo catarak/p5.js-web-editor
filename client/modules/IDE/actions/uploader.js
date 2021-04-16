@@ -102,7 +102,7 @@ export function dropzoneSendingCallback(file, xhr, formData) {
   };
 }
 
-export function dropzoneCompleteCallback(file) {
+export function dropzoneCompleteCallback(elementId, file) {
   return (dispatch) => { // eslint-disable-line
     if (
       (!file.name.match(TEXT_FILE_REGEX) || file.size >= MAX_LOCAL_FILE_SIZE) &&
@@ -119,7 +119,7 @@ export function dropzoneCompleteCallback(file) {
       // convert the json string to binary data so that btoa can encode it
       jsonStr = toBinary(jsonStr);
       inputHidden += `${window.btoa(jsonStr)}" />`;
-      document.getElementById('uploader').innerHTML += inputHidden;
+      document.getElementById(elementId).innerHTML += inputHidden;
 
       const formParams = {
         name: file.name,

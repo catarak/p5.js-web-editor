@@ -14,3 +14,13 @@
   width: 100%;
   text-align: center;
 }
+
+.uploaderAid {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  height: 60%;
+  flex-flow: column wrap;
+  z-index: 2;
+  opacity: 0.5;
+}
