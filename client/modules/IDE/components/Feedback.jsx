@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { withTranslation } from 'react-i18next';
 import GitHubLogo from '../../../images/github.svg';
@@ -7,7 +8,7 @@ function Feedback(props) {
   return (
     <div className="feedback__content">
       <Helmet>
-        <title>{this.props.t('Feedback.Title')}</title>
+        <title>{props.t('Feedback.Title')}</title>
       </Helmet>
       <div className="feedback__content-pane">
         <h2 className="feedback__content-pane-header">Via Github Issues</h2>
@@ -49,5 +50,9 @@ function Feedback(props) {
     </div>
   );
 }
+
+Feedback.propTypes = {
+  t: PropTypes.func.isRequired
+};
 
 export default withTranslation()(Feedback);
