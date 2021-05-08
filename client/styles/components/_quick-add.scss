@@ -14,8 +14,6 @@
 }
 
 .quick-add__item {
-  display: flex;
-  align-items: center;
   height: #{64 / $base-font-size}rem;
   padding-right: #{24 / $base-font-size}rem;
 
@@ -26,7 +24,7 @@
   }
 }
 
-.quick-add__item:nth-child(odd) {
+.quick-add__item:nth-child(even) {
   @include themify() {
     background: getThemifyVariable('table-row-stripe-color-alternate');
   }

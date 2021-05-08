@@ -7,19 +7,19 @@ import { withTranslation } from 'react-i18next';
 import Button from '../../../common/Button';
 import Nav from '../../../components/Nav';
 import Overlay from '../../App/components/Overlay';
-import AssetList from '../../IDE/components/AssetList';
 import AssetSize from '../../IDE/components/AssetSize';
-import CollectionList from '../../IDE/components/CollectionList';
-import SketchList from '../../IDE/components/SketchList';
-import {
-  CollectionSearchbar,
-  SketchSearchbar
-} from '../../IDE/components/Searchbar';
+import SketchTable from '../../IDE/components/SketchTable';
+import CollectionTable from '../../IDE/components/CollectionTable';
+import AssetsTable from '../../IDE/components/AssetsTable';
 
 import CollectionCreate from '../components/CollectionCreate';
 import DashboardTabSwitcherPublic, {
   TabKey
 } from '../components/DashboardTabSwitcher';
+import {
+  SketchSearchbar,
+  CollectionSearchbar
+} from '../../IDE/components/Searchbar';
 
 class DashboardView extends React.Component {
   static defaultProps = {
@@ -35,7 +35,6 @@ class DashboardView extends React.Component {
       collectionCreateVisible: false
     };
   }
-
   componentDidMount() {
     document.body.className = this.props.theme;
   }
@@ -109,12 +108,12 @@ class DashboardView extends React.Component {
   renderContent(tabKey, username) {
     switch (tabKey) {
       case TabKey.assets:
-        return <AssetList key={username} username={username} />;
+        return <AssetsTable key={username} username={username} />;
       case TabKey.collections:
-        return <CollectionList key={username} username={username} />;
+        return <CollectionTable key={username} username={username} />;
       case TabKey.sketches:
       default:
-        return <SketchList key={username} username={username} />;
+        return <SketchTable key={username} username={username} />;
     }
   }
 
