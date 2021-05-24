@@ -114,6 +114,23 @@ export function containsRootHtmlFile(tree) {
 }
 
 /**
+ * A function to check for valid file extension
+ *
+ */
+export function containsValidFileExtension(tree) {
+  const filesFolders = transformFiles(tree);
+  const filesTotal = filesFolders.filter((data) => data.fileType === 'file');
+  const filesValid = filesTotal.filter(
+    (file) =>
+      /\.html$/.test(file.name) ||
+      /\.js$/.test(file.name) ||
+      /\.css$/.test(file.name)
+  );
+  if (filesValid.length < filesTotal.length) return false;
+  return true;
+}
+
+/**
  * This converts between the public API's Project object
  * properties and a mongoose Project model
  *
