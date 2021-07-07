@@ -62,7 +62,6 @@ $themes: (
     modal-border-color: $middle-light,
     icon-color: $middle-gray,
     icon-hover-color: $darker,
-    icon-toast-hover-color: $lightest,
     shadow-color: rgba(0, 0, 0, 0.16),
     console-background-color: $light,
     console-input-background-color: $lightest,
@@ -86,10 +85,6 @@ $themes: (
     input-selection-text-color: $dark,
     input-selection-background-color: $medium-light,
     input-border-color: $middle-light,
-    search-background-color: $lightest,
-    search-clear-background-color: $light,
-    search-hover-text-color: $lightest,
-    search-hover-background-color: $medium-dark,
     keyboard-shortcut-color: $middle-gray,
     nav-hover-color: $p5js-pink,
     nav-border-color: $middle-light,
@@ -144,7 +139,6 @@ $themes: (
     modal-border-color: $middle-dark,
     icon-color: $middle-light,
     icon-hover-color: $lightest,
-    icon-toast-hover-color: $lightest,
     shadow-color: rgba(0, 0, 0, 0.16),
     console-background-color: $dark,
     console-input-background-color: $darker,
@@ -168,10 +162,6 @@ $themes: (
     input-selection-text-color: $darkest,
     input-selection-background-color: $lightest,
     input-border-color: $middle-dark,
-    search-background-color: $lightest,
-    search-clear-background-color: $medium-dark,
-    search-hover-text-color: $lightest,
-    search-hover-background-color: $p5js-pink,
     keyboard-shortcut-color: $middle-light,
     nav-hover-color: $p5js-pink,
     nav-border-color: $middle-dark,
@@ -224,7 +214,6 @@ $themes: (
     modal-border-color: $middle-dark,
     icon-color: $medium-light,
     icon-hover-color: $yellow,
-    icon-toast-hover-color: $yellow,
     shadow-color: rgba(0, 0, 0, 0.16),
     console-background-color: $dark,
     console-input-background-color: $darker,
@@ -248,10 +237,6 @@ $themes: (
     input-selection-text-color: $darkest,
     input-selection-background-color: $lightest,
     input-border-color: $middle-dark,
-    search-background-color: $white,
-    search-clear-background-color: $medium-dark,
-    search-hover-text-color: $dark,
-    search-hover-background-color: $yellow,
     keyboard-shortcut-color: $middle-light,
     nav-hover-color: $yellow,
     nav-border-color: $middle-dark,
@@ -280,8 +265,7 @@ $themes: (
   )
 );
 
-$toast-background-color: $medium-dark;
-$toast-text-color: $lightest;
+$about-background-color: $medium-dark;
 
 $light-console-error-color: #D11518;
 $light-console-warn-color: #FAAF00;

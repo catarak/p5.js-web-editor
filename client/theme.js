@@ -45,6 +45,11 @@ export const common = {
   shadowColor: 'rgba(0, 0, 0, 0.16)'
 };
 
+export const toastColors = {
+  background: grays.mediumDark,
+  text: grays.lightest
+};
+
 export const remSize = (size) => `${size / common.baseFontSize}rem`;
 
 export const prop = (key) => (props) => {
@@ -91,6 +96,14 @@ export default {
       default: grays.middleGray,
       hover: grays.darker
     },
+    Input: {
+      background: grays.lightest,
+      borderColor: grays.middleLight,
+      textColor: grays.dark
+    },
+    Logo: {
+      color: colors.p5jsPink
+    },
     MobilePanel: {
       default: {
         foreground: colors.black,
@@ -102,14 +115,26 @@ export default {
       background: grays.light,
       border: grays.middleLight
     },
+    Search: {
+      clearBackgroundColor: grays.light,
+      hover: {
+        textColor: grays.lightest,
+        backgroundColor: grays.mediumDark
+      }
+    },
     Separator: grays.middleLight,
-
-    TabHighlight: colors.p5jsPink,
     SketchList: {
       background: grays.lighter,
       card: {
         background: grays.lighter
       }
+    },
+    TabHighlight: colors.p5jsPink,
+    Text: {
+      inactive: grays.middleDark
+    },
+    Toast: {
+      iconHover: grays.lightest
     }
   },
   [Theme.dark]: {
@@ -144,6 +169,14 @@ export default {
       default: grays.middleLight,
       hover: grays.lightest
     },
+    Input: {
+      background: grays.dark,
+      borderColor: grays.middleDark,
+      textColor: grays.lightest
+    },
+    Logo: {
+      color: colors.p5jsPink
+    },
     MobilePanel: {
       default: {
         foreground: grays.light,
@@ -155,14 +188,26 @@ export default {
       background: grays.dark,
       border: grays.middleDark
     },
+    Search: {
+      clearBackgroundColor: grays.mediumDark,
+      hover: {
+        textColor: grays.lightest,
+        backgroundColor: colors.p5jsPink
+      }
+    },
     Separator: grays.middleDark,
-
-    TabHighlight: colors.p5jsPink,
     SketchList: {
       background: grays.darker,
       card: {
         background: grays.dark
       }
+    },
+    TabHighlight: colors.p5jsPink,
+    Text: {
+      inactive: grays.middleLight
+    },
+    Toast: {
+      iconHover: grays.lightest
     }
   },
   [Theme.contrast]: {
@@ -197,6 +242,14 @@ export default {
       default: grays.mediumLight,
       hover: colors.yellow
     },
+    Input: {
+      background: grays.dark,
+      borderColor: grays.middleDark,
+      textColor: grays.lightest
+    },
+    Logo: {
+      color: colors.yellow
+    },
     MobilePanel: {
       default: {
         foreground: grays.light,
@@ -208,14 +261,26 @@ export default {
       background: grays.dark,
       border: grays.middleDark
     },
+    Search: {
+      clearBackgroundColor: grays.mediumDark,
+      hover: {
+        textColor: grays.dark,
+        backgroundColor: colors.yellow
+      }
+    },
     Separator: grays.middleDark,
-
-    TabHighlight: grays.darker,
     SketchList: {
       background: colors.yellow,
       card: {
         background: grays.dark
       }
+    },
+    TabHighlight: grays.darker,
+    Text: {
+      inactive: grays.light
+    },
+    Toast: {
+      iconHover: colors.yellow
     }
   }
 };
