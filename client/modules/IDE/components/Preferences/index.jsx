@@ -176,7 +176,10 @@ class Preferences extends React.Component {
                   {this.props.t('Preferences.DecreaseFont')}
                 </h6>
               </button>
-              <form onSubmit={this.onFontInputSubmit}>
+              <form
+                onSubmit={this.onFontInputSubmit}
+                data-testid="font-size-form"
+              >
                 <input
                   className="preference__value"
                   aria-live="polite"
@@ -190,6 +193,7 @@ class Preferences extends React.Component {
                   onClick={() => {
                     this.fontSizeInput.select();
                   }}
+                  data-testid="font-size-text-field"
                 />
               </form>
               <button
