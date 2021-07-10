@@ -104,10 +104,19 @@ class FileNode extends React.Component {
 
   handleFileClick = (event) => {
     event.stopPropagation();
+    event.currentTarget.blur();
     const { isDeleting } = this.state;
     const { id, setSelectedFile, name, onClickFile } = this.props;
     if (name !== 'root' && !isDeleting) {
       setSelectedFile(id);
+
+      if (this.props.fileType === 'folder') {
+        if (this.props.isFolderClosed) {
+          this.showFolderChildren();
+        } else {
+          this.hideFolderChildren();
+        }
+      }
     }
 
     // debugger; // eslint-disable-line
@@ -223,10 +232,12 @@ class FileNode extends React.Component {
   };
 
   showFolderChildren = () => {
+    this.props.setSelectedFile(this.props.id);
     this.props.showFolderChildren(this.props.id);
   };
 
   hideFolderChildren = () => {
+    this.props.setSelectedFile(this.props.id);
     this.props.hideFolderChildren(this.props.id);
   };
 
@@ -254,8 +265,21 @@ class FileNode extends React.Component {
     const isFile = this.props.fileType === 'file';
     const isFolder = this.props.fileType === 'folder';
     const isRoot = this.props.name === 'root';
+    const isFolderClosed = isFolder && this.props.isFolderClosed;
 
     const { t } = this.props;
+
+    // Variables for folder toggling.
+    const folderButtonClass = classNames({
+      'sidebar__file-item-closed': isFolderClosed,
+      'sidebar__file-item-open': !isFolderClosed
+    });
+    const toggleFolderOpenClose = isFolderClosed
+      ? this.showFolderChildren
+      : this.hideFolderChildren;
+    const folderButtonAriaLabel = isFolderClosed
+      ? t('FileNode.OpenFolderARIA')
+      : t('FileNode.CloseFolderARIA');
 
     return (
       <div className={itemClass}>
@@ -273,26 +297,23 @@ class FileNode extends React.Component {
             {isFolder && (
               <div className="sidebar__file-item--folder">
                 <button
-                  className="sidebar__file-item-closed"
-                  onClick={this.showFolderChildren}
-                  aria-label={t('FileNode.OpenFolderARIA')}
+                  className={folderButtonClass}
+                  onClick={toggleFolderOpenClose}
+                  aria-label={folderButtonAriaLabel}
                 >
-                  <FolderRightIcon
-                    className="folder-right"
-                    focusable="false"
-                    aria-hidden="true"
-                  />
-                </button>
-                <button
-                  className="sidebar__file-item-open"
-                  onClick={this.hideFolderChildren}
-                  aria-label={t('FileNode.CloseFolderARIA')}
-                >
-                  <FolderDownIcon
-                    className="folder-down"
-                    focusable="false"
-                    aria-hidden="true"
-                  />
+                  {isFolderClosed ? (
+                    <FolderRightIcon
+                      className="folder-right"
+                      focusable="false"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    <FolderDownIcon
+                      className="folder-down"
+                      focusable="false"
+                      aria-hidden="true"
+                    />
+                  )}
                 </button>
               </div>
             )}
@@ -301,6 +322,7 @@ class FileNode extends React.Component {
               className="sidebar__file-item-name"
               onClick={this.handleFileClick}
               data-testid="file-name"
+              tabIndex={isFolder ? -1 : 0}
             >
               <FileName name={this.state.updatedName} />
             </button>
