@@ -61,8 +61,11 @@ export const prop = (key) => (props) => {
 export default {
   [Theme.light]: {
     colors,
+    grays,
     ...common,
     primaryTextColor: grays.dark,
+    inactiveTextColor: grays.middleDark,
+    heavyTextColor: grays.darker,
     backgroundColor: grays.lighter,
 
     Button: {
@@ -100,7 +103,8 @@ export default {
     },
     Modal: {
       background: grays.light,
-      border: grays.middleLight
+      border: grays.middleLight,
+      button: grays.dark
     },
     Separator: grays.middleLight,
 
@@ -110,12 +114,39 @@ export default {
       card: {
         background: grays.lighter
       }
-    }
+    },
+    logoColor: {
+      default: {
+        fill: colors.p5jsPink,
+        stroke: colors.p5jsPink
+      },
+      hover: {
+        fill: grays.darker,
+        stroke: colors.p5jsPink
+      }
+    },
+    tableRowStripeColor: {
+      default: grays.mediumLight,
+      alternate: grays.mediumLight
+    },
+    toolbarButton: {
+      color: grays.dark,
+      backgroundColor: grays.mediumLight
+    },
+    toast: {
+      textColor: grays.lightest,
+      backgroundColor: grays.mediumDark
+    },
+    iconToastHoverColor: grays.lightest,
+    preferencesButtonBackgroundColor: grays.mediumLight
   },
   [Theme.dark]: {
     colors,
+    grays,
     ...common,
     primaryTextColor: grays.lightest,
+    inactiveTextColor: grays.middleLight,
+    heavyTextColor: grays.lightest,
     backgroundColor: grays.darker,
 
     Button: {
@@ -153,7 +184,8 @@ export default {
     },
     Modal: {
       background: grays.dark,
-      border: grays.middleDark
+      border: grays.middleDark,
+      button: grays.lightest
     },
     Separator: grays.middleDark,
 
@@ -163,12 +195,39 @@ export default {
       card: {
         background: grays.dark
       }
-    }
+    },
+    logoColor: {
+      default: {
+        fill: colors.p5jsPink,
+        stroke: colors.p5jsPink
+      },
+      hover: {
+        fill: grays.lightest,
+        stroke: colors.p5jsPink
+      }
+    },
+    tableRowStripeColor: {
+      default: grays.dark,
+      alternate: grays.darker
+    },
+    toolbarButton: {
+      color: grays.lightest,
+      backgroundColor: grays.mediumDark
+    },
+    toast: {
+      textColor: grays.lightest,
+      backgroundColor: grays.mediumDark
+    },
+    iconToastHoverColor: grays.lightest,
+    preferencesButtonBackgroundColor: grays.middleDark
   },
   [Theme.contrast]: {
     colors,
+    grays,
     ...common,
     primaryTextColor: grays.lightest,
+    inactiveTextColor: grays.light,
+    heavyTextColor: grays.yellow,
     backgroundColor: grays.darker,
 
     Button: {
@@ -206,7 +265,8 @@ export default {
     },
     Modal: {
       background: grays.dark,
-      border: grays.middleDark
+      border: grays.middleDark,
+      button: grays.dark
     },
     Separator: grays.middleDark,
 
@@ -216,6 +276,30 @@ export default {
       card: {
         background: grays.dark
       }
-    }
+    },
+    logoColor: {
+      default: {
+        fill: colors.yellow,
+        stroke: colors.yellow
+      },
+      hover: {
+        fill: colors.yellow,
+        stroke: colors.yellow
+      }
+    },
+    tableRowStripeColor: {
+      default: grays.dark,
+      alternate: grays.darker
+    },
+    toolbarButton: {
+      color: grays.dark,
+      backgroundColor: grays.mediumLight
+    },
+    toast: {
+      textColor: grays.lightest,
+      backgroundColor: grays.mediumDark
+    },
+    iconToastHoverColor: colors.yellow,
+    preferencesButtonBackgroundColor: grays.mediumLight
   }
 };
