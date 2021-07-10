@@ -41,4 +41,7 @@ router.delete(
   CollectionController.removeProjectFromCollection
 );
 
+// Download collection
+router.get('/:username/collections/:id/zip', CollectionController.downloadCollectionAsZip);
+
 export default router;
